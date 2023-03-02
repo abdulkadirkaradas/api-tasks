@@ -75,6 +75,9 @@ class ConstructionStages
 
 	public function delete($id)
 	{
-		
+		$id = preg_replace('/<!--.*?-->/', '', $id);
+		$query = "UPDATE construction_stages SET status='DELETED' WHERE id=$id";
+		$this->db->exec($query);
+		return $this->getSingle($id);
 	}
 }
