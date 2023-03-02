@@ -15,6 +15,7 @@ class Api
 	public function __construct()
 	{
 		self::$db = (new Database())->init();
+		shell_exec("php phpDocumentor.phar -d . -t docs/api");
 
 		$uri = strtolower(trim((string)$_SERVER['PATH_INFO'], '/'));
 		$httpVerb = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'cli';
