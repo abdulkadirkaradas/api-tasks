@@ -50,22 +50,29 @@ class ConstructionStages
 
 	public function post(ConstructionStagesCreate $data)
 	{
-		$stmt = $this->db->prepare("
+		$validation = new Validation();
+        $validate = $validation->validate($data);
+		
+		if(gettype($validate) === "object")
+		{
+			$stmt = $this->db->prepare("
 			INSERT INTO construction_stages
 			    (name, start_date, end_date, duration, durationUnit, color, externalId, status)
 			    VALUES (:name, :start_date, :end_date, :duration, :durationUnit, :color, :externalId, :status)
 			");
-		$stmt->execute([
-			'name' => $data->name,
-			'start_date' => $data->startDate,
-			'end_date' => $data->endDate,
-			'duration' => $data->duration,
-			'durationUnit' => $data->durationUnit,
-			'color' => $data->color,
-			'externalId' => $data->externalId,
-			'status' => $data->status,
-		]);
-		return $this->getSingle($this->db->lastInsertId());
+			$stmt->execute([
+				'name' => $data->name,
+				'start_date' => $data->startDate,
+				'end_date' => $data->endDate,
+				'duration' => $data->duration,
+				'durationUnit' => $data->durationUnit,
+				'color' => $data->color,
+				'externalId' => $data->externalId,
+				'status' => $data->status,
+			]);
+			return $this->getSingle($this->db->lastInsertId());
+		}
+		return $validate;
 	}
 
     public function patch(ConstructionStagesCreate $data, $id)
@@ -104,6 +111,7 @@ class ConstructionStages
     
             return $this->getSingle($id);
         }
+		return $validate;
     }
 
 	public function delete($id)
