@@ -37,6 +37,11 @@ class Api
 				'method' => 'post',
 				'bodyType' => 'ConstructionStagesCreate'
 			],
+			'patch constructionStages' => [
+				'class' => 'ConstructionStages',
+				'method' => 'patch',
+				'bodyType' => 'ConstructionStagesCreate'
+			]
 		];
 
 		$response = [
@@ -50,7 +55,7 @@ class Api
 				if (preg_match('#^'.$pattern.'$#i', "{$httpVerb} {$uri}", $matches)) {
 					$params = [];
 					array_shift($matches);
-					if ($httpVerb === 'post') {
+					if ($httpVerb === 'post' || $httpVerb === 'patch') {
 						$data = json_decode(file_get_contents('php://input'));
 						$params = [new $target['bodyType']($data)];
 					}

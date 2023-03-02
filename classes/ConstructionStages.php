@@ -67,4 +67,14 @@ class ConstructionStages
 		]);
 		return $this->getSingle($this->db->lastInsertId());
 	}
+
+	public function patch(ConstructionStagesCreate $data, $id)
+	{
+
+	}
+
+	public function delete($id)
+	{
+		
+	}
 }
