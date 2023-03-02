@@ -50,6 +50,7 @@ class ConstructionStages
 
 	public function post(ConstructionStagesCreate $data)
 	{
+		$calculator = new Calculation();
 		$validation = new Validation();
         $validate = $validation->validate($data);
 		
@@ -60,16 +61,20 @@ class ConstructionStages
 			    (name, start_date, end_date, duration, durationUnit, color, externalId, status)
 			    VALUES (:name, :start_date, :end_date, :duration, :durationUnit, :color, :externalId, :status)
 			");
+
+			$start = new DateTime($data->startDate);
+            $end = new DateTime($data->endDate);
 			$stmt->execute([
 				'name' => $data->name,
-				'start_date' => $data->startDate,
-				'end_date' => $data->endDate,
+                "start_date" => $start->format(DateTimeInterface::ATOM),
+                "end_date" => $end->format(DateTimeInterface::ATOM),
 				'duration' => $data->duration,
 				'durationUnit' => $data->durationUnit,
 				'color' => $data->color,
 				'externalId' => $data->externalId,
 				'status' => $data->status,
 			]);
+			$calculator->init();
 			return $this->getSingle($this->db->lastInsertId());
 		}
 		return $validate;
@@ -79,12 +84,14 @@ class ConstructionStages
     {
         $id = preg_replace('/<!--.*?-->/', '', $id);
 
+		$calculator = new Calculation();
         $validation = new Validation();
         $validate = $validation->validate($data);
         
         if(gettype($validate) === "object")
         {
             $query = "UPDATE construction_stages SET";
+			
             $start = new DateTime($data->startDate);
             $end = new DateTime($data->endDate);
             $params = array(
@@ -108,6 +115,7 @@ class ConstructionStages
             $query = substr($query, 0, -1);
             $query .= " WHERE id=" . $id;
             $this->db->exec($query);
+			$calculator->init();
     
             return $this->getSingle($id);
         }
