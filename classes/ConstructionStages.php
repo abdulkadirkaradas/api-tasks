@@ -70,7 +70,34 @@ class ConstructionStages
 
 	public function patch(ConstructionStagesCreate $data, $id)
 	{
+		$id = preg_replace('/<!--.*?-->/', '', $id);
 
+		$query = "UPDATE construction_stages SET";
+		$start = new DateTime($data->startDate);
+		$end = new DateTime($data->endDate);
+		$params = array(
+			"name" => $data->name,
+			"start_date" => $start->format(DateTimeInterface::ATOM),
+			"end_date" => $end->format(DateTimeInterface::ATOM),
+			"duration" => $data->duration,
+			"durationUnit" => $data->durationUnit,
+			"color" => $data->color,
+			"externalId" => $data->externalId,
+			"status" => $data->status,
+		);
+
+		foreach ($params as $key => $value)
+		{
+			if($value != null)
+			{
+				$query .= " $key= '$value',";
+			}
+		}
+		$query = substr($query, 0, -1);
+		$query .= " WHERE id=" . $id;
+		$this->db->exec($query);
+
+		return $this->getSingle($id);
 	}
 
 	public function delete($id)
