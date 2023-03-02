@@ -79,7 +79,22 @@ class ConstructionStages
 		}
 		return $validate;
 	}
-
+    
+    /**
+     * patch
+     * 
+	 * Method receive request bag as a ConConstructionStagesCreate type.
+	 * Calls Validation and Calculation class and create instances of classes.
+	 * It then validates the received request bag with RegEx patterns.
+	 * After this validation, the method checks the validation return type and status.
+	 * If the status is not 'DELETED', the method prepares the query string and runs the query.
+	 * After the query is run, the time is calculated and updated for the relevant record.
+	 * Finally, the relevant record is returned.
+	 * 
+     * @param  ConstructionStagesCreate $data
+     * @param  mixed $id
+     * @return void
+     */
     public function patch(ConstructionStagesCreate $data, $id)
     {
         $id = preg_replace('/<!--.*?-->/', '', $id);
@@ -121,7 +136,15 @@ class ConstructionStages
         }
 		return $validate;
     }
-
+	
+	/**
+	 * delete
+	 * 
+	 * The corresponding record is updated with the status value 'DELETED' according to the id value.
+	 * 
+	 * @param  mixed $id
+	 * @return void
+	 */
 	public function delete($id)
 	{
 		$id = preg_replace('/<!--.*?-->/', '', $id);

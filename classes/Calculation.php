@@ -2,7 +2,14 @@
 
 class Calculation
 {
-    private $db;
+    private $db;    
+    /**
+     * durationTypes
+     * 
+     * Duration types for calculation
+     * 
+     * @var array
+     */
     private $durationTypes = array(
         "HOURS" => "24",
         "DAYS"  => "30",
@@ -13,7 +20,17 @@ class Calculation
     {
         $this->db = Api::getDb();
     }
-
+    
+    /**
+     * init
+     * 
+     * The method retrieves all records from the ConstructionStages class instance.
+     * It then creates the variables id, durationUnit, startDate and endDate according to the records.
+     * It then takes the differences of the two date values and converts the tjem to the ISO8601 standard.
+     * It then calls the 'getDuration' function. Updates the 'duration' value related to the data from the function.
+     * 
+     * @return void
+     */
     public function init()
     {
         $cs = new ConstructionStages();
@@ -40,7 +57,16 @@ class Calculation
             }
         }
     }
-
+    
+    /**
+     * getDuration
+     * 
+     * The method calculates and returns the duration value based on the day and durationUnit values
+     * 
+     * @param  mixed $days
+     * @param  mixed $durationUnit
+     * @return void
+     */
     public function getDuration($days, $durationUnit)
     {
         $unit = $this->durationTypes[$durationUnit];
