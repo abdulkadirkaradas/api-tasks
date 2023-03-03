@@ -15,7 +15,7 @@ class Api
 	public function __construct()
 	{
 		self::$db = (new Database())->init();
-		shell_exec("php phpDocumentor.phar -d . -t docs/api");
+		$this->exec_shell();
 
 		$uri = strtolower(trim((string)$_SERVER['PATH_INFO'], '/'));
 		$httpVerb = isset($_SERVER['REQUEST_METHOD']) ? strtolower($_SERVER['REQUEST_METHOD']) : 'cli';
@@ -71,6 +71,14 @@ class Api
 			}
 
 			echo json_encode($response, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT);
+		}
+	}
+
+	private function exec_shell()
+	{
+		if(!is_dir("./docs"))
+		{
+			shell_exec("php phpDocumentor.phar -d . -t docs/api");
 		}
 	}
 }
